@@ -16,6 +16,7 @@ Finsl project on the Udacity
 
 ```bash
 git clone https://github.com/AyishaAlli/Casting-agency.git
+cd Casting-agency
 ```
 
 2. **Install frontend dependencies**
@@ -35,13 +36,13 @@ source env/bin/activate
 >
 > - In Windows, the `env` does not have a `bin` directory. Therefore, you'd use the analogous command shown below:
 
-```python
+```bash
 source env/Scripts/activate
 ```
 
 4. **Install the dependencies:**
 
-```python
+```bash
 pip3 install -r requirements.txt
 ```
 
@@ -80,7 +81,7 @@ brew services start postgresql
 6. **create the database:**
 
 ```bash
-createdb casting-agency
+createdb casting_agency
 ```
 
 ````
@@ -97,3 +98,14 @@ createdb casting-agency
 ```python
 flask run --reload
 ```
+
+TROUBLESHOOTING
+
+If the error 'can be resolved' come up when you hover over imports
+run
+
+```bash
+which python
+```
+
+Copy and paste the path into your python interpreter (in your command palette type 'python:select interpreter')
