@@ -46,16 +46,16 @@ source env/Scripts/activate
 pip3 install -r requirements.txt
 ```
 
-5. Setup Environment Variables
+5. **Setup Environment Variables**
    The env variables can be set running setup.sh. Before running the script set the database URI string to your local database
    Add your details to line ??????? (Replace USERNAME with your postgres user and add a password if you have one. if you dont have a password please just remove the word 'PASSWORD'):
 
 ```bash
-SQLALCHEMY_DATABASE_URI = 'postgresql://USERNAME:PASSWORD@localhost:5432/fyyur' # e.g. postgresql://ayishaalli:123@localhost:5432/fyyur
+DATABASE_URI = 'postgresql://USERNAME:PASSWORD@localhost:5432/casting_agency' # e.g. postgresql://ayishaalli:123@localhost:5432/casting_agency
 
 ```
 
-Then run:
+**Then run the below to set the variables**
 
 ```bash
 sudo chmod +x setup.sh
@@ -84,14 +84,12 @@ brew services start postgresql
 createdb casting_agency
 ```
 
-````
-
-1. **Uncomment lines 22 and 23 in app.py (as seen below) to create tables then comment back out AFTER step 8.** Can be uncommented again to reset the database tables
+7. **Uncomment lines 22 and 23 in app.py (as seen below) to create tables then comment back out AFTER step 8.** Can be uncommented again to reset the database tables
 
 ```python
     with app.app_context():
        db_drop_and_create_all()
-````
+```
 
 8. **Run App**
 
@@ -101,7 +99,7 @@ flask run --reload
 
 TROUBLESHOOTING
 
-If the error 'can be resolved' come up when you hover over imports
+If the error 'can be resolved' comes up when you hover over imports
 run
 
 ```bash

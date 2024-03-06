@@ -34,32 +34,41 @@ def db_drop_and_create_all():
     db.drop_all()
     db.create_all()
 
-# Create a PostgreSQL database engine
-engine = create_engine(database_path, echo=True)
+    # Add some initial data
+    actors = [
+            Actor(name='Lisa Ann', age=18, gender='Female'),
+            Actor(name='Rita Bekket', age=22, gender='Female'),
+            Actor(name='Michelle Jones', age=25, gender='Female'),
+            Actor(name='Matt Harris', age=37, gender='Male'),
+        ]
 
-# Base class for declarative models
-Base = declarative_base()
+    for actor in actors:
+        actor.insert()
 
-movie_actor_association = Table('movie_actor_association', Base.metadata,
-    Column('movie_id', Integer, ForeignKey('movies.id')),
-    Column('actor_id', Integer, ForeignKey('actors.id'))
-)
+    movies = [
+            Movie(title='Mighty Men', release_date='2024-07-16'),
+            Movie(title='No way out', release_date='2025-09-23'),
+            Movie(title='the ultimagte Parody', release_date='2024-10-14')
+        ]
 
-class Movie(Base):
+    for movie in movies:
+        movie.insert()
+
+
+
+
+
+class Movie(db.Model):
     __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     release_date = Column(Date)
-    description = Column(String)
 
-    # Define the many-to-many relationship with Actor
-    actors = relationship("Actor", secondary=movie_actor_association, back_populates="movies")
 
-    def __init__(self, title, release_date, description):
+    def __init__(self, title, release_date):
         self.title = title
         self.release_date = release_date
-        self.description = description
 
     '''
         insert a new model into a database
@@ -90,7 +99,6 @@ class Movie(Base):
         return {
             'id': self.id,
             'title': self.title,
-            'description':self.description,
             'release_date': self.release_date
         }
 
@@ -98,27 +106,21 @@ class Movie(Base):
         return json.dumps(self.format())
 
 
-class Actor(Base):
+class Actor(db.Model):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     age = Column(Integer)
     gender = Column(String)
-    image = Column(String)
 
-    # Define the many-to-many relationship with Movie
-    movies = relationship("Movie", secondary=movie_actor_association, back_populates="actors")
-
-    def __init__(self, name, image, age, gender):
+    def __init__(self, name, age, gender):
         self.name = name
-        self.image = image
         self.age = age
         self.gender = gender
 
     '''
         inserts a new model into a database
-
     '''
 
     def insert(self):
@@ -147,13 +149,11 @@ class Actor(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'image':self.image,
             'age': self.age,
             'gender': self.gender
         }
 
     def __repr__(self):
         return json.dumps(self.format())
+    
 
-# Create the tables in the database
-Base.metadata.create_all(engine)

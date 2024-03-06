@@ -1,0 +1,17 @@
+{% block title %}Actor{%endblock %} {% block content %}
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="monospace">{{ actor.name }}</h1>
+    <p>{{ actor.age }}</p>
+    <p>{{ actor.gender }}</p>
+
+    <a href="/actors/{{ actor.id }}/edit"
+      ><button class="btn btn-primary btn-lg">Edit</button></a
+    >
+    <a href="/actors/{{ actor.id }}/delete"
+      ><button class="btn btn-danger btn-lg">Delete</button></a
+    >
+
+    {% endblock %}
+  </div>
+</div>

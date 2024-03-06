@@ -1,0 +1,15 @@
+{% block title %}Actors{% endblock %} {% block content %}
+<ul class="items">
+  {% for actor in actors %}
+  <li>
+    <a href="/actors/{{ actor.id }}"
+      ><div class="item">
+        <h5>{{ actor.name }}</h5>
+        <p>{{ actor.age }}</p>
+        <p>{{ actor.gender }}</p>
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

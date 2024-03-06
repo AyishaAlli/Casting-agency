@@ -1,0 +1,22 @@
+{
+  "name": "starter_code",
+  "version": "1.0.0",
+  "description": "# My Motivation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AyishaAlli/Casting-agency.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AyishaAlli/Casting-agency/issues"
+  },
+  "homepage": "https://github.com/AyishaAlli/Casting-agency#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
+}
