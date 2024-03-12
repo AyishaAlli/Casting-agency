@@ -97,6 +97,139 @@ createdb casting_agency
 flask run --reload
 ```
 
+The API will return three types of errors:
+
+- 404 – resource not found
+- 422 – unprocessable
+- 401 - Unauthorized
+- 400 - bad request
+- 500 - internal server error
+- 403 - Forbidden
+
+### Endpoints
+
+#### GET /actors
+
+- General: Return list of actors in Database
+- Sample: `curl -L -X GET 'vast-stream-21858.herokuapp.com/actors' \
+-H 'Authorization: Bearer Assisant_Token'`<br>
+
+              {
+                  "actors": [
+                      {
+                          "age": 25,
+                          "gender": "male",
+                          "id": 3,
+                          "name": "mohammad"
+                      }
+                  ],
+                  "success": true
+              }
+
+#### GET /movies
+
+- General: Return list of movies in Database
+- Sample: `curl -L -X GET 'vast-stream-21858.herokuapp.com/movies' \
+-H 'Authorization: Bearer Assisant_Token'`<br>
+
+              {
+                  "movies": [],
+                  "success": true
+              }
+
+#### POST /actors
+
+- General:
+  - Create actor using JSON Request Body
+  - Return ID of created actor
+- Sample: `curl -X POST 'vast-stream-21858.herokuapp.com/actors' \
+-H 'Authorization: Bearer Director_Token' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "name":"mohammad",
+    "age":15,
+    "gender":"male"
+}'`
+
+              {
+                  "created_id": 4,
+                  "success": true
+              }
+
+#### POST /movies
+
+- General:
+  - Create movie using JSON Request Body
+  - Return ID of created movie
+- Sample: `curl -X POST 'vast-stream-21858.herokuapp.com/movies' \
+-H 'Authorization: Bearer Executive_Token' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "title":"The Mud",
+    "release_date" : "10-10-2016"
+}'`
+
+              {
+                  "created_id": 2,
+                  "success": true
+              }
+
+#### PATCH /actors/<actor_id>
+
+- General:
+  - Modify actor given id in URL provided the information to update
+- Sample: `curl -X PATCH 'vast-stream-21858.herokuapp.com/actors/3' \
+-H 'Authorization: Bearer Director_Token' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "name" : "mohammad",
+    "age" : 25
+}'`
+
+              {
+                  "actor": {
+                      "age": 25,
+                      "gender": "male",
+                      "id": 3,
+                      "name": "mohammad"
+                  },
+                  "success": true
+              }
+
+#### PATCH /movies/<movie_id>
+
+- General:
+  - Modify movie given id in URL provided the information to update
+- Sample: `curl -X PATCH 'vast-stream-21858.herokuapp.com/movies/2' \
+-H 'Authorization: Bearer Director_Token' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "title":"Terminator",
+    "release_date":"10/19/2019"
+}'`
+
+#### DELETE /actors/<actor_id>
+
+- General: Delete an actor given id in URL
+- Sample: `curl -X DELETE 'vast-stream-21858.herokuapp.com/actors/3' \
+-H 'Authorization: Bearer Executive_Token'`
+
+              {
+                  "deleted_id": 3,
+                  "success": true
+              }
+
+#### DELETE /movies/<movie_id>
+
+- General: Delete movie given id in URL
+- Sample: `curl -X DELETE 'vast-stream-21858.herokuapp.com/movies/2' \
+-H 'Authorization: Bearer Executive_Token'`
+
+              {
+                  "deleted_id": 2,
+                  "success": true
+              }
+
 TROUBLESHOOTING
 
 If the error 'can be resolved' comes up when you hover over imports
@@ -107,3 +240,32 @@ which python
 ```
 
 Copy and paste the path into your python interpreter (in your command palette type 'python:select interpreter')
+
+Roles:
+
+Casting Assistant
+Can view actors and movies
+
+```
+assistant@gmail.com
+testing12345!
+```
+
+Casting Director
+All permissions a Casting Assistant has and…
+Add or delete an actor from the database
+
+```
+castingdirector@gmail.com
+testing12345!
+```
+
+Modify actors or movies
+Executive Producer
+All permissions a Casting Director has and…
+Add or delete a movie from the database
+
+```
+execprod@gmail.com
+testing12345!
+```

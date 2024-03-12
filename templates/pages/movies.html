@@ -1,9 +1,10 @@
-{% block title %}Actors{% endblock %} {% block content %}
+{% block title %}Movies{% endblock %} {% block content %}
 <ul class="items">
   {% for movie in movies %}
   <li>
-    <div class="item">
-      <h5>{{ movie.title }}</h5>
+    <a href="/movies/{{ movie.id }}"
+    ><div class="item">
+      <h3>{{ movie.title }}</h3>
       <p>{{ movie.release_date }}</p>
     </div>
   </li>

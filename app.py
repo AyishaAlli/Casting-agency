@@ -1,10 +1,15 @@
+import json
 import os
 import sys
-from flask import Flask, flash, redirect, render_template, request, abort, jsonify, url_for
+from urllib.parse import quote_plus, urlencode
+from dotenv import find_dotenv, load_dotenv
+from flask import Flask, flash, redirect, render_template, request, abort, jsonify, session, url_for
 from flask_cors import CORS
-
+from auth import AuthError, requires_auth
 from database.models import db, Actor, Movie, db_drop_and_create_all, setup_db
 from forms import ActorForm, MovieForm
+
+from authlib.integrations.flask_client import OAuth
 
 SECRET_KEY = os.urandom(32)
 
@@ -28,6 +33,36 @@ def create_app(db_URI="", test_config=None):
     CORS(app)
 
     app.config['SECRET_KEY'] = SECRET_KEY
+    
+
+    ENV_FILE = find_dotenv()
+    if ENV_FILE:
+        load_dotenv(ENV_FILE)
+
+    oauth = OAuth(app)
+
+    oauth.register(
+    "auth0",
+    client_id=os.environ.get("AUTH0_CLIENT_ID"),
+    client_secret=os.environ.get("AUTH0_CLIENT_SECRET"),
+    client_kwargs={
+        "scope": "openid profile email",
+    },
+    server_metadata_url=f'https://{os.environ.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
+    )
+
+    @app.route("/login")
+    def login():   
+        return oauth.auth0.authorize_redirect(
+            redirect_uri=url_for("callback", _external=True)
+        )
+    
+    @app.route("/callback", methods=["GET", "POST"])
+    def callback():
+        token = oauth.auth0.authorize_access_token()
+        session["user"] = token
+        return redirect("/")
+
 
 #  -------------------------------------------------------------------------#
 #  Controllers
@@ -41,14 +76,30 @@ def create_app(db_URI="", test_config=None):
     # homepage
     @app.route('/')
     def index():
-      return render_template('pages/home.html')
-    
+      return render_template('pages/home.html', session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+
+    @app.route("/logout")
+    def logout():
+        session.clear()
+        return redirect(
+            "https://" + os.environ.get("AUTH0_DOMAIN")
+            + "/v2/logout?"
+            + urlencode(
+                {
+                    "returnTo": url_for("home", _external=True),
+                    "client_id": os.environ.get("AUTH0_CLIENT_ID"),
+                },
+                quote_via=quote_plus,
+            )
+        )
+
 #  -------------------------------------------------------------------------#
 #  Actors
 #  -------------------------------------------------------------------------#    
     
     # get all Actors
     @app.route('/actors')
+    @requires_auth('get:actors')
     def get_actors():
         actors = Actor.query.order_by(Actor.id).all()
         formatted_actors = [actor.format() for actor in actors]
@@ -57,12 +108,14 @@ def create_app(db_URI="", test_config=None):
 
     # Actor Form 
     @app.route('/actors/create', methods=['GET'], endpoint='new_actor')
+    @requires_auth('get:actors')
     def create_actor_form():
      form = ActorForm()
      return render_template('forms/new_actor.html', form=form)
     
     # Create Actor
     @app.route('/actors/create', methods=['POST']) 
+    @requires_auth('post:actors')
     def create_actor_submission():
       form = ActorForm()
       error = False
@@ -99,6 +152,7 @@ def create_app(db_URI="", test_config=None):
     
     # Update Actor
     @app.route('/actors/<int:actor_id>/edit', methods=['GET'])
+    @requires_auth('patch:actors')
     def edit_actor(actor_id):
         form = ActorForm()
 
@@ -112,6 +166,7 @@ def create_app(db_URI="", test_config=None):
         return render_template('forms/edit_actor.html', form=form, actor=actor)
     
     @app.route('/actors/<int:actor_id>/edit', methods=['POST'])
+    @requires_auth('patch:actors')
     def edit_actor_submission(actor_id):
         form = ActorForm()
         try:
@@ -138,6 +193,7 @@ def create_app(db_URI="", test_config=None):
 
     # Delete Actor
     @app.route('/actors/<actor_id>/delete', methods=['GET'])
+    @requires_auth('delete:movies')
     def delete_actor(actor_id):   
         error = False
         try:
@@ -162,6 +218,7 @@ def create_app(db_URI="", test_config=None):
     
     # get all movies
     @app.route('/movies')
+    @requires_auth('get:movies')
     def get_movies():
         movies = Movie.query.order_by(Movie.id).all()
         formatted_movies = [movie.format() for movie in movies]
@@ -170,12 +227,14 @@ def create_app(db_URI="", test_config=None):
     
     # Movie Form
     @app.route('/movies/create', methods=['GET'], endpoint='new_movie')
+    @requires_auth('post:movies')
     def create_movie_form():
      form = MovieForm()
      return render_template('forms/new_movie.html', form=form)
     
     # Create Movie
     @app.route('/movies/create', methods=[ 'POST']) 
+    @requires_auth('post:movies')
     def create_movie_submission():
       form = MovieForm()
       error = False
@@ -204,13 +263,14 @@ def create_app(db_URI="", test_config=None):
     # show Movie
     @app.route('/movies/<int:movie_id>')
     def show_movie(movie_id):
-        movie = Actor.query.get(movie_id)
+        movie = Movie.query.get(movie_id)
        
         
         return render_template('pages/movie.html', movie=movie)
     
     # Update Movie
     @app.route('/movies/<int:movie_id>/edit', methods=['GET'])
+    @requires_auth('get:movies')
     def edit_movie(movie_id):
         form = MovieForm()
 
@@ -223,6 +283,7 @@ def create_app(db_URI="", test_config=None):
         return render_template('forms/edit_movie.html', form=form, movie=movie)
     
     @app.route('/movies/<int:movie_id>/edit', methods=['POST'])
+    @requires_auth('patch:movies')
     def edit_movie_submission(movie_id):
         form = MovieForm()
         try:
@@ -234,11 +295,11 @@ def create_app(db_URI="", test_config=None):
             movie.release_date = form.release_date.data
 
             db.session.commit()
-            flash( request.form['name'] + ' was successfully updated!')
+            flash( request.form['title'] + ' was successfully updated!')
 
         except Exception as e:
             db.session.rollback()
-            flash('An error occurred.' + request.form['name'] + ' could not be updated.')
+            flash('An error occurred.' + request.form['title'] + ' could not be updated.')
 
         finally:
             db.session.close()
@@ -247,6 +308,7 @@ def create_app(db_URI="", test_config=None):
 
     # Delete Movie
     @app.route('/movies/<movie_id>/delete', methods=['GET'])
+    @requires_auth('delete:movies')
     def delete_movie(movie_id):   
         error = False
         try:

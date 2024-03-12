@@ -1,0 +1,16 @@
+{% block title %}Movie{%endblock %} {% block content %}
+<div class="row">
+  <div class="col-sm-6">
+    <h1 class="monospace">{{ movie.title }}</h1>
+    <p>{{ movie.release_date }}</p>
+
+    <a href="/movies/{{ movie.id }}/edit"
+      ><button class="btn btn-primary btn-lg">Edit</button></a
+    >
+    <a href="/movies/{{ movie.id }}/delete"
+      ><button class="btn btn-danger btn-lg">Delete</button></a
+    >
+
+    {% endblock %}
+  </div>
+</div>
