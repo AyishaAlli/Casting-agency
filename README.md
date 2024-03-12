@@ -1,5 +1,7 @@
 # Casting-agency
 
+Hosted [Here](https://casting-agency-mc2u.onrender.com)
+
 # My Motivation
 
 Finsl project on the Udacity
@@ -114,17 +116,17 @@ The API will return three types of errors:
 - Sample: `curl -L -X GET 'vast-stream-21858.herokuapp.com/actors' \
 -H 'Authorization: Bearer Assisant_Token'`<br>
 
-              {
-                  "actors": [
-                      {
-                          "age": 25,
-                          "gender": "male",
-                          "id": 3,
-                          "name": "mohammad"
-                      }
-                  ],
-                  "success": true
-              }
+                {
+                    "actors": [
+                        {
+                            "age": 25,
+                            "gender": "male",
+                            "id": 3,
+                            "name": "mohammad"
+                        }
+                    ],
+                    "success": true
+                }
 
 #### GET /movies
 
@@ -132,10 +134,10 @@ The API will return three types of errors:
 - Sample: `curl -L -X GET 'vast-stream-21858.herokuapp.com/movies' \
 -H 'Authorization: Bearer Assisant_Token'`<br>
 
-              {
-                  "movies": [],
-                  "success": true
-              }
+                {
+                    "movies": [],
+                    "success": true
+                }
 
 #### POST /actors
 
@@ -151,10 +153,10 @@ The API will return three types of errors:
     "gender":"male"
 }'`
 
-              {
-                  "created_id": 4,
-                  "success": true
-              }
+                {
+                    "created_id": 4,
+                    "success": true
+                }
 
 #### POST /movies
 
@@ -169,10 +171,10 @@ The API will return three types of errors:
     "release_date" : "10-10-2016"
 }'`
 
-              {
-                  "created_id": 2,
-                  "success": true
-              }
+                {
+                    "created_id": 2,
+                    "success": true
+                }
 
 #### PATCH /actors/<actor_id>
 
@@ -186,15 +188,15 @@ The API will return three types of errors:
     "age" : 25
 }'`
 
-              {
-                  "actor": {
-                      "age": 25,
-                      "gender": "male",
-                      "id": 3,
-                      "name": "mohammad"
-                  },
-                  "success": true
-              }
+                {
+                    "actor": {
+                        "age": 25,
+                        "gender": "male",
+                        "id": 3,
+                        "name": "mohammad"
+                    },
+                    "success": true
+                }
 
 #### PATCH /movies/<movie_id>
 
@@ -214,10 +216,10 @@ The API will return three types of errors:
 - Sample: `curl -X DELETE 'vast-stream-21858.herokuapp.com/actors/3' \
 -H 'Authorization: Bearer Executive_Token'`
 
-              {
-                  "deleted_id": 3,
-                  "success": true
-              }
+                {
+                    "deleted_id": 3,
+                    "success": true
+                }
 
 #### DELETE /movies/<movie_id>
 
@@ -225,10 +227,10 @@ The API will return three types of errors:
 - Sample: `curl -X DELETE 'vast-stream-21858.herokuapp.com/movies/2' \
 -H 'Authorization: Bearer Executive_Token'`
 
-              {
-                  "deleted_id": 2,
-                  "success": true
-              }
+                {
+                    "deleted_id": 2,
+                    "success": true
+                }
 
 TROUBLESHOOTING
 
