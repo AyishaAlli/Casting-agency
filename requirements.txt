@@ -12,15 +12,13 @@ certifi==2024.2.2
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
-cryptography>=3.3.2
+cryptography>=42.0.4
 dnspython==2.6.1
 ecdsa==0.18.0
 email_validator==2.1.1
 Flask==3.0.2
-Flask-Authlib==1.6.0
 Flask-Bcrypt==1.0.1
 Flask-Cors==4.0.0
-Flask-Login==0.6.3
 Flask-Migrate==4.0.5
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.1
