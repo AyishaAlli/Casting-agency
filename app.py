@@ -350,7 +350,7 @@ def create_app(db_URI="", test_config=None):
             }), 404)
 
     @app.errorhandler(405)
-    def not_found(error):
+    def method_not_allowed(error):
         return (
             jsonify({
                 "success": False,
