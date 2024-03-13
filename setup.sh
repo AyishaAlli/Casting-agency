@@ -1,4 +1,4 @@
-export DATABASE_URL="postgres://postgresuser:9OSEiShjV4BsSByBYKQcwrjXv8GW8Kxm@dpg-cnoue8vsc6pc73d5u73g-a.oregon-postgres.render.com/casting_agency_dwu0"
+export DATABASE_URL="postgres://postgresuser:9OSEiShjV4BsSByBYKQcwrjXv8GW8Kxm@dpg-cnoue8vsc6pc73d5u73g-a/casting_agency_dwu0"
 export FLASK_APP=app
 export FLASK_ENV=development
 export AUTH0_DOMAIN='dev-qhsu4ty5ej1veb8a.us.auth0.com'
